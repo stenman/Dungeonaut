@@ -26,20 +26,21 @@ public class GameScreen implements Screen {
 
 	private BitmapFont font;
 
-	private Music rainMusic;
-	private Sound dropSound;
+	private Music music_classical;
+	private Sound sound_drop;
 
 	private OrthographicCamera camera;
 
-	private Texture bucketImage;
-	private Rectangle bucket;
-	private Sprite bucketSprite;
+	private Texture heroImage;
+	private Rectangle hero;
+	private Sprite heroSprite;
 
-	private Texture dropImage;
-	private Array<Rectangle> raindrops;
-	private long lastDropTime;
-	private long nextDropTime;
-	private int dropsGathered;
+	private Texture floorTile;
+	private Texture rock_1;
+	private Texture tree_1;
+	private Array<Rectangle> floorTiles;
+	private Array<Rectangle> rocks;
+	private Array<Rectangle> trees;
 
 	private Vector3 touchPos;
 
@@ -54,25 +55,33 @@ public class GameScreen implements Screen {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, screenWidth, screenHeight);
 
-		rainMusic = Gdx.audio.newMusic(Gdx.files.internal("Delibes-Notturno.mp3"));
-		rainMusic.setLooping(true);
+		music_classical = Gdx.audio.newMusic(Gdx.files.internal("Delibes-Notturno.mp3"));
+		music_classical.setLooping(true);
 
-		dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
+		sound_drop = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
 
-		dropImage = new Texture(Gdx.files.internal("bluebox.png"));
+		floorTile = new Texture(Gdx.files.internal("floor_gravel_1.png"));
+		rock_1 = new Texture(Gdx.files.internal("rock_1.png"));
+		tree_1 = new Texture(Gdx.files.internal("tree_1.png"));
 
-		bucket = new Rectangle();
-		bucketImage = new Texture(Gdx.files.internal("tree.png"));
-		bucketImage.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		bucketSprite = new Sprite(bucketImage);
+		hero = new Rectangle();
+		heroImage = new Texture(Gdx.files.internal("bluebox.png"));
+		heroImage.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		heroSprite = new Sprite(heroImage);
 
-		bucket.width = 64;
-		bucket.height = 64;
-		bucket.x = screenWidth / 2 - bucket.width / 2;
-		bucket.y = 20;
+		hero.width = 64;
+		hero.height = 64;
+		hero.x = screenWidth / 2 - hero.width / 2;
+		hero.y = 20;
 
-		raindrops = new Array<Rectangle>();
-		spawnRaindrop();
+		floorTiles = new Array<Rectangle>();
+		rocks = new Array<Rectangle>();
+		trees = new Array<Rectangle>();
+
+		// TODO: Spawn stuff here?
+		// spawnFloorTiles();
+		// spawnRocks();
+		// spawnTrees();
 	}
 
 	@Override
@@ -88,14 +97,13 @@ public class GameScreen implements Screen {
 		game.batch.begin();
 		// SPRITEBATCH BEGIN------------------------------------------------------------------
 
-		font.draw(game.batch, "Drop Collected: " + dropsGathered, 0, 480);
-
-		game.batch.draw(bucketSprite, bucket.x, bucket.y, bucket.width, bucket.height);
+		game.batch.draw(heroSprite, hero.x, hero.y, hero.width, hero.height);
 
 		printOnScreenInfo();
 
-		for (Rectangle raindrop : raindrops) {
-			game.batch.draw(dropImage, raindrop.x, raindrop.y);
+		// Generate dungeon
+		for (Rectangle raindrop : floorTiles) {
+			game.batch.draw(floorTile, raindrop.x, raindrop.y);
 		}
 
 		// SPRITEBATCH END--------------------------------------------------------------------
@@ -107,59 +115,41 @@ public class GameScreen implements Screen {
 			touchPos = new Vector3();
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			camera.unproject(touchPos);
-			bucket.x = touchPos.x - bucket.width / 2;
+			hero.x = touchPos.x - hero.width / 2;
 		}
 
 		// Key input control
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-			bucket.x -= 300 * Gdx.graphics.getDeltaTime();
+			hero.x -= 300 * Gdx.graphics.getDeltaTime();
 		}
 		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			bucket.x += 300 * Gdx.graphics.getDeltaTime();
+			hero.x += 300 * Gdx.graphics.getDeltaTime();
 		}
 		if (Gdx.input.isKeyPressed(Keys.UP)) {
-			bucket.setSize(bucket.width + 3, bucket.height + 3);
+			hero.setSize(hero.width + 3, hero.height + 3);
 		}
 		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-			bucket.setSize(bucket.width - 3, bucket.height - 3);
-		}
-		if (Gdx.input.isKeyPressed(Keys.C)) {
-//			sandbox = new Vector3(100,100,100);
-//			camera.rotate(sandbox, 55);
-		}
-
-		// Bucket size check
-		if (bucket.width < 20 || bucket.height < 20) {
-			bucket.setSize(bucket.width + 3, bucket.height + 3);
-		}
-		if (bucket.width > 250 || bucket.height > 250) {
-			bucket.setSize(bucket.width - 3, bucket.height - 3);
+			hero.setSize(hero.width - 3, hero.height - 3);
 		}
 
 		// Screen edge checks
-		if (bucket.x < 0) {
-			bucket.x = 0;
+		if (hero.x < 0) {
+			hero.x = 0;
 		}
-		if (bucket.x > screenWidth - bucket.width) {
-			bucket.x = screenWidth - bucket.width;
-		}
-
-		// Raindrop spawn timer
-		if (TimeUtils.nanoTime() - lastDropTime > nextDropTime) {
-			spawnRaindrop();
+		if (hero.x > screenWidth - hero.width) {
+			hero.x = screenWidth - hero.width;
 		}
 
-		// Raindrop collision check
-		Iterator<Rectangle> iter = raindrops.iterator();
+		// Collision check
+		Iterator<Rectangle> iter = floorTiles.iterator();
 		while (iter.hasNext()) {
 			Rectangle raindrop = iter.next();
 			raindrop.y -= 200 * Gdx.graphics.getDeltaTime();
 			if (raindrop.y + 64 < 0) {
 				iter.remove();
 			}
-			if (raindrop.overlaps(bucket)) {
-				dropsGathered++;
-				dropSound.play();
+			if (raindrop.overlaps(hero)) {
+				sound_drop.play();
 				iter.remove();
 			}
 		}
@@ -172,7 +162,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
-		rainMusic.play();
+		music_classical.play();
 	}
 
 	@Override
@@ -189,30 +179,18 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		dropImage.dispose();
-		bucketImage.dispose();
-		dropSound.dispose();
-		rainMusic.dispose();
+		floorTile.dispose();
+		heroImage.dispose();
+		sound_drop.dispose();
+		music_classical.dispose();
 	}
 
 	// DEBUG
 	private void printOnScreenInfo() {
 		font.draw(game.batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 20, screenHeight - 20);
-		font.draw(game.batch, "bucket.width: " + bucket.width, 20, screenHeight - 40);
-		font.draw(game.batch, "bucket.height: " + bucket.height, 20, screenHeight - 60);
-		font.draw(game.batch, "bucketSprite.width: " + bucketSprite.getWidth(), 20, screenHeight - 80);
-		font.draw(game.batch, "bucketSprite.height: " + bucketSprite.getHeight(), 20, screenHeight - 100);
+		font.draw(game.batch, "bucket.width: " + hero.width, 20, screenHeight - 40);
+		font.draw(game.batch, "bucket.height: " + hero.height, 20, screenHeight - 60);
+		font.draw(game.batch, "bucketSprite.width: " + heroSprite.getWidth(), 20, screenHeight - 80);
+		font.draw(game.batch, "bucketSprite.height: " + heroSprite.getHeight(), 20, screenHeight - 100);
 	}
-
-	private void spawnRaindrop() {
-		Rectangle raindrop = new Rectangle();
-		raindrop.x = MathUtils.random(0, screenWidth - 64);
-		raindrop.y = 480;
-		raindrop.width = 64;
-		raindrop.height = 64;
-		raindrops.add(raindrop);
-		lastDropTime = TimeUtils.nanoTime();
-		nextDropTime = MathUtils.random(300000000, 1200000000);
-	}
-
 }
