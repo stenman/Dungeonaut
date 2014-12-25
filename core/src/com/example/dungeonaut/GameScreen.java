@@ -74,8 +74,8 @@ public class GameScreen implements Screen {
 		heroImage.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		heroSprite = new Sprite(heroImage);
 
-		hero.width = 64;
-		hero.height = 64;
+		hero.width = 32;
+		hero.height = 32;
 		hero.x = screenWidth / 2 - hero.width / 2;
 		hero.y = 20;
 
@@ -195,9 +195,9 @@ public class GameScreen implements Screen {
 	// DEBUG
 	private void printOnScreenInfo() {
 		font.draw(game.batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 20, screenHeight - 20);
-		font.draw(game.batch, "bucket.width: " + hero.width, 20, screenHeight - 40);
-		font.draw(game.batch, "bucket.height: " + hero.height, 20, screenHeight - 60);
-		font.draw(game.batch, "bucketSprite.width: " + heroSprite.getWidth(), 20, screenHeight - 80);
-		font.draw(game.batch, "bucketSprite.height: " + heroSprite.getHeight(), 20, screenHeight - 100);
+		font.draw(game.batch, "hero.width: " + hero.width, 20, screenHeight - 40);
+		font.draw(game.batch, "hero.height: " + hero.height, 20, screenHeight - 60);
+		font.draw(game.batch, "heroSprite.width: " + heroSprite.getWidth(), 20, screenHeight - 80);
+		font.draw(game.batch, "heroSprite.height: " + heroSprite.getHeight(), 20, screenHeight - 100);
 	}
 }
