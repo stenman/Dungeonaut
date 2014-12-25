@@ -47,6 +47,11 @@ public class GameScreen implements Screen {
 	private static final int screenWidth = 800;
 	private static final int screenHeight = 480;
 
+	// TODO: Make all sprites POT (8 or 16 for hero)
+	// TODO: Spawn floortiles, rocks and trees
+	// TODO: Fix collision detection with rocks and trees
+	// TODO: Create squares or hexagons for hero movement
+
 	public GameScreen(final Dungeonaut game) {
 		this.game = game;
 
@@ -99,13 +104,12 @@ public class GameScreen implements Screen {
 
 		game.batch.draw(heroSprite, hero.x, hero.y, hero.width, hero.height);
 
-		printOnScreenInfo();
-
 		// Generate dungeon
-		for (Rectangle raindrop : floorTiles) {
-			game.batch.draw(floorTile, raindrop.x, raindrop.y);
+		for (Rectangle fTile : floorTiles) {
+			game.batch.draw(floorTile, fTile.x, fTile.y);
 		}
 
+		printOnScreenInfo();
 		// SPRITEBATCH END--------------------------------------------------------------------
 		game.batch.end();
 		// SPRITEBATCH END--------------------------------------------------------------------
@@ -147,7 +151,7 @@ public class GameScreen implements Screen {
 			hero.y = screenHeight - hero.height;
 		}
 
-		// Collision check
+		// Collision detection
 		Iterator<Rectangle> iter = rocks.iterator();
 		while (iter.hasNext()) {
 			Rectangle rock = iter.next();
