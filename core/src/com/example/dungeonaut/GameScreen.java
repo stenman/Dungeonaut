@@ -110,15 +110,16 @@ public class GameScreen implements Screen {
 		game.batch.end();
 		// SPRITEBATCH END--------------------------------------------------------------------
 
-		// Move bucket
+		// Move hero [MOUSE/TOUCH]
 		if (Gdx.input.isTouched()) {
 			touchPos = new Vector3();
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			camera.unproject(touchPos);
 			hero.x = touchPos.x - hero.width / 2;
+			hero.y = touchPos.y - hero.height / 2;
 		}
 
-		// Key input control
+		// Move hero [KEYBOARD]
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
 			hero.x -= 300 * Gdx.graphics.getDeltaTime();
 		}
@@ -126,10 +127,10 @@ public class GameScreen implements Screen {
 			hero.x += 300 * Gdx.graphics.getDeltaTime();
 		}
 		if (Gdx.input.isKeyPressed(Keys.UP)) {
-			hero.setSize(hero.width + 3, hero.height + 3);
+			hero.y += 300 * Gdx.graphics.getDeltaTime();
 		}
 		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-			hero.setSize(hero.width - 3, hero.height - 3);
+			hero.y -= 300 * Gdx.graphics.getDeltaTime();
 		}
 
 		// Screen edge checks
@@ -139,16 +140,18 @@ public class GameScreen implements Screen {
 		if (hero.x > screenWidth - hero.width) {
 			hero.x = screenWidth - hero.width;
 		}
+		if (hero.y < 0) {
+			hero.y = 0;
+		}
+		if (hero.y > screenHeight - hero.height) {
+			hero.y = screenHeight - hero.height;
+		}
 
 		// Collision check
-		Iterator<Rectangle> iter = floorTiles.iterator();
+		Iterator<Rectangle> iter = rocks.iterator();
 		while (iter.hasNext()) {
-			Rectangle raindrop = iter.next();
-			raindrop.y -= 200 * Gdx.graphics.getDeltaTime();
-			if (raindrop.y + 64 < 0) {
-				iter.remove();
-			}
-			if (raindrop.overlaps(hero)) {
+			Rectangle rock = iter.next();
+			if (rock.overlaps(hero)) {
 				sound_drop.play();
 				iter.remove();
 			}
