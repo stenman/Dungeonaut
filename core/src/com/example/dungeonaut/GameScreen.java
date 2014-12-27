@@ -76,13 +76,13 @@ public class GameScreen implements Screen {
 		rock_1 = new Texture(Gdx.files.internal("rock_1.png"));
 		tree_1 = new Texture(Gdx.files.internal("tree_1.png"));
 
-		hero = new Hero();
+		hero = new Hero(150);
 		heroImage = new Texture(Gdx.files.internal("bluebox.png"));
 		heroImage.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		heroSprite = new Sprite(heroImage);
 
-		hero.width = 32;
-		hero.height = 32;
+		hero.width = 16;
+		hero.height = 16;
 		hero.x = screenWidth / 2 - hero.width / 2;
 		hero.y = 20;
 

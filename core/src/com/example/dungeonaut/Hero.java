@@ -10,22 +10,25 @@ public class Hero extends Rectangle {
 	private boolean moveE;
 	private boolean moveW;
 
-	public Hero() {
+	private int speed = 200;
+
+	public Hero(int speed) {
+		this.speed = speed;
 	}
 
 	void updateMotion() {
 
 		if (moveN) {
-			y += 300 * Gdx.graphics.getDeltaTime();
+			y += speed * Gdx.graphics.getDeltaTime();
 		}
 		if (moveS) {
-			y -= 300 * Gdx.graphics.getDeltaTime();
+			y -= speed * Gdx.graphics.getDeltaTime();
 		}
 		if (moveE) {
-			x += 300 * Gdx.graphics.getDeltaTime();
+			x += speed * Gdx.graphics.getDeltaTime();
 		}
 		if (moveW) {
-			x -= 300 * Gdx.graphics.getDeltaTime();
+			x -= speed * Gdx.graphics.getDeltaTime();
 		}
 	}
 
