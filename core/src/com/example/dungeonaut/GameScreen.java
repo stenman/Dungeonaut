@@ -4,6 +4,8 @@ import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -32,7 +34,7 @@ public class GameScreen implements Screen {
 	private OrthographicCamera camera;
 
 	private Texture heroImage;
-	private Rectangle hero;
+	private Hero hero;
 	private Sprite heroSprite;
 
 	private Texture floorTile;
@@ -44,10 +46,15 @@ public class GameScreen implements Screen {
 
 	private Vector3 touchPos;
 
+	private InputProcessor inputProcessor;
+
 	private static final int screenWidth = 800;
 	private static final int screenHeight = 480;
 
 	// TODO: Make all sprites POT (8 or 16 for hero)
+	// TODO: Make hero move at a set speed at a keyDown
+	// TODO: Make hero move at a set speed towards a touchdown
+	// TODO: Make hero move exactly one square (8 or 16 pixels) at a keyDown or touchDown
 	// TODO: Spawn floortiles, rocks and trees
 	// TODO: Fix collision detection with rocks and trees
 	// TODO: Create squares or hexagons for hero movement
@@ -69,7 +76,7 @@ public class GameScreen implements Screen {
 		rock_1 = new Texture(Gdx.files.internal("rock_1.png"));
 		tree_1 = new Texture(Gdx.files.internal("tree_1.png"));
 
-		hero = new Rectangle();
+		hero = new Hero();
 		heroImage = new Texture(Gdx.files.internal("bluebox.png"));
 		heroImage.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		heroSprite = new Sprite(heroImage);
@@ -82,6 +89,10 @@ public class GameScreen implements Screen {
 		floorTiles = new Array<Rectangle>();
 		rocks = new Array<Rectangle>();
 		trees = new Array<Rectangle>();
+
+		inputProcessor = new MyInputProcessor(hero);
+
+		Gdx.input.setInputProcessor(inputProcessor);
 
 		// TODO: Spawn stuff here?
 		// spawnFloorTiles();
@@ -124,18 +135,7 @@ public class GameScreen implements Screen {
 		}
 
 		// Move hero [KEYBOARD]
-		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-			hero.x -= 300 * Gdx.graphics.getDeltaTime();
-		}
-		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			hero.x += 300 * Gdx.graphics.getDeltaTime();
-		}
-		if (Gdx.input.isKeyPressed(Keys.UP)) {
-			hero.y += 300 * Gdx.graphics.getDeltaTime();
-		}
-		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-			hero.y -= 300 * Gdx.graphics.getDeltaTime();
-		}
+		hero.updateMotion();
 
 		// Screen edge checks
 		if (hero.x < 0) {
