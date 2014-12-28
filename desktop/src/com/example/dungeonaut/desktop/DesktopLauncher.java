@@ -5,6 +5,14 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.example.dungeonaut.Dungeonaut;
 
 public class DesktopLauncher {
+
+	// TODO: Make hero move at a set speed towards a touchdown
+	// TODO: Create a grid of 16x16 squares
+	// TODO: Make hero move exactly one square (8 or 16 pixels) at a keyDown or touchDown
+	// TODO: Spawn floortiles, rocks and trees
+	// TODO: Fix collision detection with rocks and trees
+	// TODO: Create squares or hexagons for hero movement
+	
 	public static void main(String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 

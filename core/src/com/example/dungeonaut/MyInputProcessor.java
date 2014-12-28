@@ -1,5 +1,6 @@
 package com.example.dungeonaut;
 
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 
@@ -37,6 +38,9 @@ public class MyInputProcessor implements InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		if (button == Buttons.LEFT) {
+			hero.setMoveN(true);
+		}
 		return false;
 	}
 

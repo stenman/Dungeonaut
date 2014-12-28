@@ -17,7 +17,6 @@ public class Hero extends Rectangle {
 	}
 
 	void updateMotion() {
-
 		if (moveN) {
 			y += speed * Gdx.graphics.getDeltaTime();
 		}

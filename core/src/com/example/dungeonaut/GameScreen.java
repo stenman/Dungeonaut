@@ -51,14 +51,6 @@ public class GameScreen implements Screen {
 	private static final int screenWidth = 800;
 	private static final int screenHeight = 480;
 
-	// TODO: Make all sprites POT (8 or 16 for hero)
-	// TODO: Make hero move at a set speed at a keyDown
-	// TODO: Make hero move at a set speed towards a touchdown
-	// TODO: Make hero move exactly one square (8 or 16 pixels) at a keyDown or touchDown
-	// TODO: Spawn floortiles, rocks and trees
-	// TODO: Fix collision detection with rocks and trees
-	// TODO: Create squares or hexagons for hero movement
-
 	public GameScreen(final Dungeonaut game) {
 		this.game = game;
 
