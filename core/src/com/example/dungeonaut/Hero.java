@@ -1,7 +1,5 @@
 package com.example.dungeonaut;
 
-import java.text.DecimalFormat;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
@@ -99,6 +97,14 @@ public class Hero extends Rectangle {
 			moveT = false;
 		}
 		moveW = true;
+	}
+
+	public void stop() {
+		moveN = false;
+		moveS = false;
+		moveE = false;
+		moveW = false;
+		moveT = false;
 	}
 
 	public int getSpeed() {

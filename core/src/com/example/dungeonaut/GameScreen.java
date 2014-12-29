@@ -33,6 +33,8 @@ public class GameScreen implements Screen {
 	private Hero hero;
 	private Sprite heroSprite;
 
+	private Rectangle cursor;
+
 	private Texture floorTile;
 	private Texture rock_1;
 	private Texture tree_1;
@@ -83,6 +85,8 @@ public class GameScreen implements Screen {
 		// OTHER
 		inputProcessor = new HeroInputProcessor(hero);
 		Gdx.input.setInputProcessor(inputProcessor);
+		cursor = new Rectangle(0, 0, 1, 1);
+		touchPos = new Vector3();
 
 		// TODO: Spawn stuff here
 	}
@@ -110,6 +114,11 @@ public class GameScreen implements Screen {
 		game.batch.end();
 		// SPRITEBATCH END--------------------------------------------------------------------
 
+		if (Gdx.input.isTouched()) {
+			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+			camera.unproject(touchPos);
+			cursor.setPosition(touchPos.x, touchPos.y);
+		}
 		// Update Hero movement
 		hero.updateMotion();
 
@@ -135,6 +144,9 @@ public class GameScreen implements Screen {
 				sound_drop.play();
 				iter.remove();
 			}
+		}
+		if (hero.overlaps(cursor)) {
+			hero.stop();
 		}
 
 	}
