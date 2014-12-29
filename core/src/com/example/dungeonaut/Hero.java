@@ -1,19 +1,36 @@
 package com.example.dungeonaut;
 
+import java.text.DecimalFormat;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 public class Hero extends Rectangle {
+
 	private static final long serialVersionUID = 1L;
-	private boolean moveN;
-	private boolean moveS;
-	private boolean moveE;
-	private boolean moveW;
+	private boolean moveN = false;
+	private boolean moveS = false;
+	private boolean moveE = false;
+	private boolean moveW = false;
+	private boolean moveT = false;
 
 	private int speed = 200;
 
-	public Hero(int speed) {
+	private Vector3 touch = new Vector3();
+	private Vector2 currentPosition = new Vector2();
+	private Vector2 direction = new Vector2();
+	private Vector2 velocity;
+	private Vector2 movement = new Vector2();
+
+	private OrthographicCamera camera;
+
+	public Hero(int speed, Vector2 position, OrthographicCamera camera) {
+		this.setPosition(position);
 		this.speed = speed;
+		this.camera = camera;
 	}
 
 	void updateMotion() {
@@ -29,11 +46,33 @@ public class Hero extends Rectangle {
 		if (moveW) {
 			x -= speed * Gdx.graphics.getDeltaTime();
 		}
+		if (moveT) {
+			movement.set(velocity).scl(Gdx.graphics.getDeltaTime());
+			this.setPosition(currentPosition.add(movement));
+		}
+	}
+
+	public void setMoveToTouchPosition(boolean moveT) {
+		this.moveN = false;
+		this.moveS = false;
+		this.moveE = false;
+		this.moveW = false;
+		this.moveT = moveT;
+
+		this.touch = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+		this.camera.unproject(touch);
+
+		currentPosition = new Vector2(this.x, this.y);
+
+		direction.set(new Vector2(touch.x, touch.y)).sub(currentPosition).nor();
+
+		velocity = new Vector2(direction).scl(speed);
 	}
 
 	public void setMoveN(boolean t) {
 		if (moveN && t) {
 			moveS = false;
+			moveT = false;
 		}
 		moveN = true;
 	}
@@ -41,6 +80,7 @@ public class Hero extends Rectangle {
 	public void setMoveS(boolean t) {
 		if (moveS && t) {
 			moveN = false;
+			moveT = false;
 		}
 		moveS = true;
 	}
@@ -48,6 +88,7 @@ public class Hero extends Rectangle {
 	public void setMoveE(boolean t) {
 		if (moveE && t) {
 			moveW = false;
+			moveT = false;
 		}
 		moveE = true;
 	}
@@ -55,7 +96,37 @@ public class Hero extends Rectangle {
 	public void setMoveW(boolean t) {
 		if (moveW && t) {
 			moveE = false;
+			moveT = false;
 		}
 		moveW = true;
 	}
+
+	public int getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(int speed) {
+		this.speed = speed;
+	}
+
+	public Vector3 getTouch() {
+		return touch;
+	}
+
+	public Vector2 getCurrentPosition() {
+		return currentPosition;
+	}
+
+	public Vector2 getDirection() {
+		return direction;
+	}
+
+	public Vector2 getVelocity() {
+		return velocity;
+	}
+
+	public Vector2 getMovement() {
+		return movement;
+	}
+
 }

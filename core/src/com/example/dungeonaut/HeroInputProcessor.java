@@ -4,11 +4,11 @@ import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 
-public class MyInputProcessor implements InputProcessor {
+public class HeroInputProcessor implements InputProcessor {
 
 	Hero hero;
 
-	public MyInputProcessor(Hero hero) {
+	public HeroInputProcessor(Hero hero) {
 		this.hero = hero;
 	}
 
@@ -39,7 +39,10 @@ public class MyInputProcessor implements InputProcessor {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		if (button == Buttons.LEFT) {
-			hero.setMoveN(true);
+			hero.setMoveToTouchPosition(true);
+		}
+		if (button == Buttons.RIGHT) {
+			hero.setMoveToTouchPosition(false);
 		}
 		return false;
 	}

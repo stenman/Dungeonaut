@@ -3,24 +3,20 @@ package com.example.dungeonaut;
 import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.TimeUtils;
 
 public class GameScreen implements Screen {
 
@@ -54,42 +50,41 @@ public class GameScreen implements Screen {
 	public GameScreen(final Dungeonaut game) {
 		this.game = game;
 
+		// FONTS
 		font = new BitmapFont();
 
+		// CAMERA
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, screenWidth, screenHeight);
 
+		// MUSIC
 		music_classical = Gdx.audio.newMusic(Gdx.files.internal("Delibes-Notturno.mp3"));
 		music_classical.setLooping(true);
 
+		// SOUNDS
 		sound_drop = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
 
-		floorTile = new Texture(Gdx.files.internal("floor_gravel_1.png"));
-		rock_1 = new Texture(Gdx.files.internal("rock_1.png"));
-		tree_1 = new Texture(Gdx.files.internal("tree_1.png"));
-
-		hero = new Hero(150);
+		// HERO
+		hero = new Hero(150, new Vector2((screenWidth / 2), 100), camera);
 		heroImage = new Texture(Gdx.files.internal("bluebox.png"));
 		heroImage.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		heroSprite = new Sprite(heroImage);
-
 		hero.width = 16;
 		hero.height = 16;
-		hero.x = screenWidth / 2 - hero.width / 2;
-		hero.y = 20;
 
+		// ENVIRONMENT
+		floorTile = new Texture(Gdx.files.internal("floor_gravel_1.png"));
+		rock_1 = new Texture(Gdx.files.internal("rock_1.png"));
+		tree_1 = new Texture(Gdx.files.internal("tree_1.png"));
 		floorTiles = new Array<Rectangle>();
 		rocks = new Array<Rectangle>();
 		trees = new Array<Rectangle>();
 
-		inputProcessor = new MyInputProcessor(hero);
-
+		// OTHER
+		inputProcessor = new HeroInputProcessor(hero);
 		Gdx.input.setInputProcessor(inputProcessor);
 
-		// TODO: Spawn stuff here?
-		// spawnFloorTiles();
-		// spawnRocks();
-		// spawnTrees();
+		// TODO: Spawn stuff here
 	}
 
 	@Override
@@ -103,7 +98,6 @@ public class GameScreen implements Screen {
 
 		// SPRITEBATCH BEGIN------------------------------------------------------------------
 		game.batch.begin();
-		// SPRITEBATCH BEGIN------------------------------------------------------------------
 
 		game.batch.draw(heroSprite, hero.x, hero.y, hero.width, hero.height);
 
@@ -113,20 +107,10 @@ public class GameScreen implements Screen {
 		}
 
 		printOnScreenInfo();
-		// SPRITEBATCH END--------------------------------------------------------------------
 		game.batch.end();
 		// SPRITEBATCH END--------------------------------------------------------------------
 
-		// Move hero [MOUSE/TOUCH]
-		if (Gdx.input.isTouched()) {
-			touchPos = new Vector3();
-			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-			camera.unproject(touchPos);
-			hero.x = touchPos.x - hero.width / 2;
-			hero.y = touchPos.y - hero.height / 2;
-		}
-
-		// Move hero [KEYBOARD]
+		// Update Hero movement
 		hero.updateMotion();
 
 		// Screen edge checks
@@ -187,9 +171,10 @@ public class GameScreen implements Screen {
 	// DEBUG
 	private void printOnScreenInfo() {
 		font.draw(game.batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 20, screenHeight - 20);
-		font.draw(game.batch, "hero.width: " + hero.width, 20, screenHeight - 40);
-		font.draw(game.batch, "hero.height: " + hero.height, 20, screenHeight - 60);
-		font.draw(game.batch, "heroSprite.width: " + heroSprite.getWidth(), 20, screenHeight - 80);
-		font.draw(game.batch, "heroSprite.height: " + heroSprite.getHeight(), 20, screenHeight - 100);
+		font.draw(game.batch, "hero.currentPosition: " + hero.getCurrentPosition(), 20, screenHeight - 40);
+		font.draw(game.batch, "hero.direction: " + hero.getDirection(), 20, screenHeight - 60);
+		font.draw(game.batch, "hero.movement: " + hero.getMovement(), 20, screenHeight - 80);
+		font.draw(game.batch, "hero.touch: " + hero.getTouch(), 20, screenHeight - 100);
+		font.draw(game.batch, "hero.velocity: " + hero.getVelocity(), 20, screenHeight - 120);
 	}
 }
