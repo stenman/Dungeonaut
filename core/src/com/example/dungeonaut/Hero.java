@@ -23,12 +23,9 @@ public class Hero extends Rectangle {
 	private Vector2 velocity;
 	private Vector2 movement = new Vector2();
 
-	private OrthographicCamera camera;
-
-	public Hero(int speed, Vector2 position, OrthographicCamera camera) {
+	public Hero(int speed, Vector2 position) {
 		this.setPosition(position);
 		this.speed = speed;
-		this.camera = camera;
 	}
 
 	void updateMotion() {
@@ -58,7 +55,7 @@ public class Hero extends Rectangle {
 		this.moveT = moveT;
 
 		this.touch = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-		this.camera.unproject(touch);
+		GameScreen.getCamera().unproject(touch);
 
 		currentPosition = new Vector2(this.x, this.y);
 

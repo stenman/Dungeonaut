@@ -27,7 +27,7 @@ public class GameScreen implements Screen {
 	private Music music_classical;
 	private Sound sound_drop;
 
-	private OrthographicCamera camera;
+	private static OrthographicCamera camera;
 
 	private Texture heroImage;
 	private Hero hero;
@@ -67,7 +67,7 @@ public class GameScreen implements Screen {
 		sound_drop = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
 
 		// HERO
-		hero = new Hero(150, new Vector2((screenWidth / 2), 100), camera);
+		hero = new Hero(150, new Vector2((screenWidth / 2), 100));
 		heroImage = new Texture(Gdx.files.internal("bluebox.png"));
 		heroImage.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		heroSprite = new Sprite(heroImage);
@@ -178,6 +178,10 @@ public class GameScreen implements Screen {
 		heroImage.dispose();
 		sound_drop.dispose();
 		music_classical.dispose();
+	}
+
+	public static OrthographicCamera getCamera() {
+		return camera;
 	}
 
 	// DEBUG
