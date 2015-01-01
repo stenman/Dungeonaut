@@ -44,6 +44,9 @@ public class Hero extends Rectangle {
 		if (moveT) {
 			movement.set(velocity).scl(Gdx.graphics.getDeltaTime());
 			this.setPosition(currentPosition.add(movement));
+			// TODO: This is HIGHLY approximate and should not be used as a means to stop the sprite from moving! Make this better!
+			if (touch.dst(currentPosition.x, currentPosition.y, 0) < 5)
+				moveT = false;
 		}
 	}
 
