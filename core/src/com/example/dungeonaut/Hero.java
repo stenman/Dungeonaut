@@ -1,7 +1,6 @@
 package com.example.dungeonaut;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -44,9 +43,11 @@ public class Hero extends Rectangle {
 		if (moveT) {
 			movement.set(velocity).scl(Gdx.graphics.getDeltaTime());
 			this.setPosition(currentPosition.add(movement));
-			// TODO: This is HIGHLY approximate and should not be used as a means to stop the sprite from moving! Make this better!
-			if (touch.dst(currentPosition.x, currentPosition.y, 0) < 5)
+
+			// TODO: This is highly approximate and should not be used as a means to stop the Sprite.
+			if (touch.dst(currentPosition.x, currentPosition.y, 0) < 4) {
 				moveT = false;
+			}
 		}
 	}
 
@@ -134,5 +135,4 @@ public class Hero extends Rectangle {
 	public Vector2 getMovement() {
 		return movement;
 	}
-
 }

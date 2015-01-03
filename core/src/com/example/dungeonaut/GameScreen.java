@@ -3,6 +3,7 @@ package com.example.dungeonaut;
 import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
@@ -82,7 +83,9 @@ public class GameScreen implements Screen {
 
 		// OTHER
 		inputProcessor = new HeroInputProcessor(hero);
-		Gdx.input.setInputProcessor(inputProcessor);
+		InputMultiplexer inputMultiplexer = new InputMultiplexer();
+		inputMultiplexer.addProcessor(inputProcessor);
+		Gdx.input.setInputProcessor(inputMultiplexer);
 
 		// TODO: Spawn stuff here
 	}
@@ -174,10 +177,10 @@ public class GameScreen implements Screen {
 	// DEBUG
 	private void printOnScreenInfo() {
 		font.draw(game.batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 20, screenHeight - 20);
-		font.draw(game.batch, "hero.currentPosition: " + hero.getCurrentPosition(), 20, screenHeight - 40);
-		font.draw(game.batch, "hero.direction: " + hero.getDirection(), 20, screenHeight - 60);
-		font.draw(game.batch, "hero.movement: " + hero.getMovement(), 20, screenHeight - 80);
-		font.draw(game.batch, "hero.touch: " + hero.getTouch(), 20, screenHeight - 100);
+		font.draw(game.batch, "hero.touch: " + hero.getTouch(), 20, screenHeight - 40);
+		font.draw(game.batch, "hero.currentPosition: " + hero.getCurrentPosition(), 20, screenHeight - 60);
+		font.draw(game.batch, "hero.direction: " + hero.getDirection(), 20, screenHeight - 80);
+		font.draw(game.batch, "hero.movement: " + hero.getMovement(), 20, screenHeight - 100);
 		font.draw(game.batch, "hero.velocity: " + hero.getVelocity(), 20, screenHeight - 120);
 	}
 }
