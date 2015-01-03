@@ -16,7 +16,7 @@ public class Hero extends Rectangle {
 
 	private int speed = 200;
 
-	private Vector3 touch = new Vector3();
+	private Vector3 touch;
 	private Vector2 currentPosition = new Vector2();
 	private Vector2 direction = new Vector2();
 	private Vector2 velocity;
@@ -44,8 +44,10 @@ public class Hero extends Rectangle {
 			movement.set(velocity).scl(Gdx.graphics.getDeltaTime());
 			this.setPosition(currentPosition.add(movement));
 
-			// TODO: This is highly approximate and should not be used as a means to stop the Sprite.
-			if (touch.dst(currentPosition.x, currentPosition.y, 0) < 4) {
+			if (touch.dst(currentPosition.x, currentPosition.y, 0) < 2) {
+				currentPosition.x = touch.x;
+				currentPosition.y = touch.y;
+				this.setPosition(currentPosition);
 				moveT = false;
 			}
 		}
