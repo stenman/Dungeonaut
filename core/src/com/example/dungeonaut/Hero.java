@@ -44,6 +44,7 @@ public class Hero extends Rectangle {
 			movement.set(velocity).scl(Gdx.graphics.getDeltaTime());
 			this.setPosition(currentPosition.add(movement));
 
+			// TODO: This check number needs to be dynamic (in case the speed is increased for instance)
 			if (touch.dst(currentPosition.x, currentPosition.y, 0) < 2) {
 				currentPosition.x = touch.x;
 				currentPosition.y = touch.y;
@@ -53,7 +54,7 @@ public class Hero extends Rectangle {
 		}
 	}
 
-	public void setMoveToTouchPosition(boolean moveT) {
+	public void moveToTouchPosition(boolean moveT) {
 		this.moveN = false;
 		this.moveS = false;
 		this.moveE = false;
@@ -63,7 +64,7 @@ public class Hero extends Rectangle {
 		this.touch = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
 		GameScreen.getCamera().unproject(touch);
 
-		currentPosition = new Vector2(this.x, this.y);
+		currentPosition = new Vector2(this.x + (this.getWidth() / 2), this.y + (this.getHeight() / 2));
 
 		direction.set(new Vector2(touch.x, touch.y)).sub(currentPosition).nor();
 
@@ -108,6 +109,14 @@ public class Hero extends Rectangle {
 		moveE = false;
 		moveW = false;
 		moveT = false;
+	}
+
+	@Override
+	public Rectangle setPosition(Vector2 position) {
+		this.x = position.x - (this.width / 2);
+		this.y = position.y - (this.height / 2);
+
+		return this;
 	}
 
 	public int getSpeed() {

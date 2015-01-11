@@ -39,10 +39,10 @@ public class HeroInputProcessor implements InputProcessor {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		if (button == Buttons.LEFT) {
-			hero.setMoveToTouchPosition(true);
+			hero.moveToTouchPosition(true);
 		}
 		if (button == Buttons.RIGHT) {
-			hero.setMoveToTouchPosition(false);
+			hero.moveToTouchPosition(false);
 		}
 		return false;
 	}
