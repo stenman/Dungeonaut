@@ -14,15 +14,6 @@ public class HeroInputProcessor implements InputProcessor {
 
 	@Override
 	public boolean keyDown(int keyCode) {
-		if (keyCode == Keys.UP) {
-			hero.setMoveN(true);
-		} else if (keyCode == Keys.DOWN) {
-			hero.setMoveS(true);
-		} else if (keyCode == Keys.RIGHT) {
-			hero.setMoveE(true);
-		} else if (keyCode == Keys.LEFT) {
-			hero.setMoveW(true);
-		}
 		return false;
 	}
 

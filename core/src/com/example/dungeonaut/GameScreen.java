@@ -3,6 +3,7 @@ package com.example.dungeonaut;
 import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
@@ -112,6 +113,26 @@ public class GameScreen implements Screen {
 		printOnScreenInfo();
 		game.batch.end();
 		// SPRITEBATCH END--------------------------------------------------------------------
+
+		if (Gdx.input.isKeyPressed(Keys.W) || Gdx.input.isKeyPressed(Keys.UP)) {
+			hero.stopMoveByTouch();
+			hero.moveNorthByKey();
+		}
+
+		if (Gdx.input.isKeyPressed(Keys.S) || Gdx.input.isKeyPressed(Keys.DOWN)) {
+			hero.stopMoveByTouch();
+			hero.moveSouthByKey();
+		}
+
+		if (Gdx.input.isKeyPressed(Keys.D) || Gdx.input.isKeyPressed(Keys.RIGHT)) {
+			hero.stopMoveByTouch();
+			hero.moveEastByKey();
+		}
+
+		if (Gdx.input.isKeyPressed(Keys.A) || Gdx.input.isKeyPressed(Keys.LEFT)) {
+			hero.stopMoveByTouch();
+			hero.moveWestByKey();
+		}
 
 		// Update Hero movement
 		hero.updateMotion();

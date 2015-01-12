@@ -8,10 +8,6 @@ import com.badlogic.gdx.math.Vector3;
 public class Hero extends Rectangle {
 
 	private static final long serialVersionUID = 1L;
-	private boolean moveN = false;
-	private boolean moveS = false;
-	private boolean moveE = false;
-	private boolean moveW = false;
 	private boolean moveT = false;
 
 	private int speed = 200;
@@ -27,19 +23,23 @@ public class Hero extends Rectangle {
 		this.speed = speed;
 	}
 
+	void moveNorthByKey() {
+		y += speed * Gdx.graphics.getDeltaTime();
+	}
+
+	void moveSouthByKey() {
+		y -= speed * Gdx.graphics.getDeltaTime();
+	}
+
+	void moveEastByKey() {
+		x += speed * Gdx.graphics.getDeltaTime();
+	}
+
+	void moveWestByKey() {
+		x -= speed * Gdx.graphics.getDeltaTime();
+	}
+
 	void updateMotion() {
-		if (moveN) {
-			y += speed * Gdx.graphics.getDeltaTime();
-		}
-		if (moveS) {
-			y -= speed * Gdx.graphics.getDeltaTime();
-		}
-		if (moveE) {
-			x += speed * Gdx.graphics.getDeltaTime();
-		}
-		if (moveW) {
-			x -= speed * Gdx.graphics.getDeltaTime();
-		}
 		if (moveT) {
 			movement.set(velocity).scl(Gdx.graphics.getDeltaTime());
 			this.setPosition(currentPosition.add(movement));
@@ -55,10 +55,6 @@ public class Hero extends Rectangle {
 	}
 
 	public void moveToTouchPosition(boolean moveT) {
-		this.moveN = false;
-		this.moveS = false;
-		this.moveE = false;
-		this.moveW = false;
 		this.moveT = moveT;
 
 		this.touch = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
@@ -71,43 +67,7 @@ public class Hero extends Rectangle {
 		velocity = new Vector2(direction).scl(speed);
 	}
 
-	public void setMoveN(boolean t) {
-		if (moveN && t) {
-			moveS = false;
-			moveT = false;
-		}
-		moveN = true;
-	}
-
-	public void setMoveS(boolean t) {
-		if (moveS && t) {
-			moveN = false;
-			moveT = false;
-		}
-		moveS = true;
-	}
-
-	public void setMoveE(boolean t) {
-		if (moveE && t) {
-			moveW = false;
-			moveT = false;
-		}
-		moveE = true;
-	}
-
-	public void setMoveW(boolean t) {
-		if (moveW && t) {
-			moveE = false;
-			moveT = false;
-		}
-		moveW = true;
-	}
-
-	public void stop() {
-		moveN = false;
-		moveS = false;
-		moveE = false;
-		moveW = false;
+	public void stopMoveByTouch() {
 		moveT = false;
 	}
 
