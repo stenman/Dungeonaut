@@ -45,6 +45,7 @@ public class HeroInputProcessor implements InputProcessor {
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		hero.moveToTouchPosition(true);
 		return false;
 	}
 

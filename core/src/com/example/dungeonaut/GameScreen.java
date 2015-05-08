@@ -20,6 +20,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
+// TODO: Make hero follow mousedown/touchhold
+// TODO: Spawn floortiles, rocks and trees
+// TODO: Fix collision detection with rocks, trees and edges of "game area"
+// TODO: (Cosmetics) Make a little circle-animation on touchdown
+// TODO: Place random floortiles, rock and trees images
+
 public class GameScreen implements Screen {
 
 	private final Dungeonaut game;
@@ -35,9 +41,9 @@ public class GameScreen implements Screen {
 	private Hero hero;
 	private Sprite heroSprite;
 
-	private Texture floorTile;
-	private Texture rock_1;
-	private Texture tree_1;
+	private Texture floorImage1;
+	private Texture rockImage1;
+	private Texture treeImage1;
 	private Array<Rectangle> floorTiles;
 	private Array<Rectangle> rocks;
 	private Array<Rectangle> trees;
@@ -67,7 +73,7 @@ public class GameScreen implements Screen {
 		sound_drop = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
 
 		// HERO
-		hero = new Hero(150, new Vector2((screenWidth / 2), 100));
+		hero = new Hero(150, new Vector2((screenWidth / 2), 240));
 		heroImage = new Texture(Gdx.files.internal("bluebox.png"));
 		heroImage.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		heroSprite = new Sprite(heroImage);
@@ -75,10 +81,17 @@ public class GameScreen implements Screen {
 		hero.height = 16;
 
 		// ENVIRONMENT
-		floorTile = new Texture(Gdx.files.internal("floor_gravel_1.png"));
-		rock_1 = new Texture(Gdx.files.internal("rock_1.png"));
-		tree_1 = new Texture(Gdx.files.internal("tree_1.png"));
+		floorImage1 = new Texture(Gdx.files.internal("floor_gravel_1.png"));
 		floorTiles = new Array<Rectangle>();
+		for (int i = 0; i < 35; i++) {
+			for (int j = 0; j < 20; j++) {
+				Rectangle floorTile = new Rectangle((i*16)+120,(j*16)+80,16,16);
+				floorTiles.add(floorTile);
+			}
+		}
+		
+		rockImage1 = new Texture(Gdx.files.internal("rock_1.png"));
+		treeImage1 = new Texture(Gdx.files.internal("tree_1.png"));
 		rocks = new Array<Rectangle>();
 		trees = new Array<Rectangle>();
 
@@ -103,12 +116,12 @@ public class GameScreen implements Screen {
 		// SPRITEBATCH BEGIN------------------------------------------------------------------
 		game.batch.begin();
 
-		game.batch.draw(heroSprite, hero.x, hero.y, hero.width, hero.height);
-
 		// Generate dungeon
 		for (Rectangle fTile : floorTiles) {
-			game.batch.draw(floorTile, fTile.x, fTile.y);
+			game.batch.draw(floorImage1, fTile.x, fTile.y);
 		}
+
+		game.batch.draw(heroSprite, hero.x, hero.y, hero.width, hero.height);
 
 		printOnScreenInfo();
 		game.batch.end();
@@ -168,7 +181,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
-		music_classical.play();
+		// music_classical.play();
 	}
 
 	@Override
@@ -185,7 +198,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		floorTile.dispose();
+		floorImage1.dispose();
 		heroImage.dispose();
 		sound_drop.dispose();
 		music_classical.dispose();

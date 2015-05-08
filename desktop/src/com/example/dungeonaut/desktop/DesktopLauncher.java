@@ -6,10 +6,6 @@ import com.example.dungeonaut.Dungeonaut;
 
 public class DesktopLauncher {
 
-	// TODO: Spawn floortiles, rocks and trees
-	// TODO: Fix collision detection with rocks and trees
-	// TODO: (Cosmetics) Make a little circle-animation on touchdown
-
 	public static void main(String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
