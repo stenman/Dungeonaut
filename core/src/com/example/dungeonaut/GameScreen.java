@@ -1,6 +1,7 @@
 package com.example.dungeonaut;
 
 import java.util.Iterator;
+import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -41,6 +42,8 @@ public class GameScreen implements Screen {
 	private Hero hero;
 	private Sprite heroSprite;
 
+	private static final int NUM_TREES = 5;
+	private static final int NUM_ROCKS = 15;
 	private Texture floorImage1;
 	private Texture rockImage1;
 	private Texture treeImage1;
@@ -83,17 +86,42 @@ public class GameScreen implements Screen {
 		// ENVIRONMENT
 		floorImage1 = new Texture(Gdx.files.internal("floor_gravel_1.png"));
 		floorTiles = new Array<Rectangle>();
-		for (int i = 0; i < 35; i++) {
-			for (int j = 0; j < 20; j++) {
-				Rectangle floorTile = new Rectangle((i*16)+120,(j*16)+80,16,16);
+		for (int i = 0; i < 50; i++) {
+			for (int j = 0; j < 30; j++) {
+				Rectangle floorTile = new Rectangle((i * 16), (j * 16), 16, 16);
 				floorTiles.add(floorTile);
 			}
 		}
-		
 		rockImage1 = new Texture(Gdx.files.internal("rock_1.png"));
-		treeImage1 = new Texture(Gdx.files.internal("tree_1.png"));
 		rocks = new Array<Rectangle>();
+
+		Random rng = new Random();
+
+		for (int i = 0; i < NUM_ROCKS; i++) {
+
+			boolean overlapped = true;
+			Rectangle rock = null;
+
+			while (overlapped) {
+				overlapped = false;
+				int xPos = rng.nextInt(screenWidth - 16);
+				int yPos = rng.nextInt(screenHeight - 16);
+				rock = new Rectangle(xPos, yPos, 16, 16);
+				for (Rectangle r : rocks) {
+					if (rock.overlaps(r)) {
+						overlapped = true;
+					}
+				}
+				if (rock.overlaps(hero)) {
+					overlapped = true;
+				}
+			}
+			rocks.add(rock);
+		}
+
 		trees = new Array<Rectangle>();
+
+		treeImage1 = new Texture(Gdx.files.internal("tree_1.png"));
 
 		// OTHER
 		inputProcessor = new HeroInputProcessor(hero);
@@ -119,6 +147,9 @@ public class GameScreen implements Screen {
 		// Generate dungeon
 		for (Rectangle fTile : floorTiles) {
 			game.batch.draw(floorImage1, fTile.x, fTile.y);
+		}
+		for (Rectangle rock : rocks) {
+			game.batch.draw(rockImage1, rock.x, rock.y);
 		}
 
 		game.batch.draw(heroSprite, hero.x, hero.y, hero.width, hero.height);
