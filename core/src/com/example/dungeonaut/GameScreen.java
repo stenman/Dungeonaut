@@ -16,6 +16,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -41,6 +43,7 @@ public class GameScreen implements Screen {
 	private Texture heroImage;
 	private Hero hero;
 	private Sprite heroSprite;
+	private ShapeRenderer sr;
 
 	private static final int NUM_TREES = 5;
 	private static final int NUM_ROCKS = 15;
@@ -124,6 +127,7 @@ public class GameScreen implements Screen {
 		treeImage1 = new Texture(Gdx.files.internal("tree_1.png"));
 
 		// OTHER
+		sr = new ShapeRenderer();
 		inputProcessor = new HeroInputProcessor(hero);
 		InputMultiplexer inputMultiplexer = new InputMultiplexer();
 		inputMultiplexer.addProcessor(inputProcessor);
@@ -141,6 +145,10 @@ public class GameScreen implements Screen {
 
 		game.batch.setProjectionMatrix(camera.combined);
 
+		// SHAPERENDERER BEGIN------------------------------------------------------------------
+
+		// SHAPERENDERER END------------------------------------------------------------------
+
 		// SPRITEBATCH BEGIN------------------------------------------------------------------
 		game.batch.begin();
 
@@ -155,8 +163,15 @@ public class GameScreen implements Screen {
 		game.batch.draw(heroSprite, hero.x, hero.y, hero.width, hero.height);
 
 		printOnScreenInfo();
+
 		game.batch.end();
 		// SPRITEBATCH END--------------------------------------------------------------------
+
+		sr.begin(ShapeType.Line);
+		sr.setColor(1, 1, 0, 1);
+		sr.line(hero.getCurrentPosition(), hero.getMovement());
+		// sr.line(50, 100, 150, 200);
+		sr.end();
 
 		if (Gdx.input.isKeyPressed(Keys.W) || Gdx.input.isKeyPressed(Keys.UP)) {
 			hero.stopMoveByTouch();
@@ -229,6 +244,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
+		sr.dispose();
 		floorImage1.dispose();
 		heroImage.dispose();
 		sound_drop.dispose();
