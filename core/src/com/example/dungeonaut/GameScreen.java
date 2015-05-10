@@ -168,9 +168,10 @@ public class GameScreen implements Screen {
 		// SPRITEBATCH END--------------------------------------------------------------------
 
 		sr.begin(ShapeType.Line);
-		sr.setColor(1, 1, 0, 1);
-		sr.line(hero.getCurrentPosition(), hero.getMovement());
-		// sr.line(50, 100, 150, 200);
+		sr.setColor(0, 0, 0, 0);
+		if (hero.getTouchPos() != null) {
+			sr.line(hero.getCurrentPosition().x, hero.getCurrentPosition().y, hero.getTouchPos().x, hero.getTouchPos().y);
+		}
 		sr.end();
 
 		if (Gdx.input.isKeyPressed(Keys.W) || Gdx.input.isKeyPressed(Keys.UP)) {
@@ -258,7 +259,7 @@ public class GameScreen implements Screen {
 	// DEBUG
 	private void printOnScreenInfo() {
 		font.draw(game.batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 20, screenHeight - 20);
-		font.draw(game.batch, "hero.touch: " + hero.getTouch(), 20, screenHeight - 40);
+		font.draw(game.batch, "hero.touch: " + hero.getTouchPos(), 20, screenHeight - 40);
 		font.draw(game.batch, "hero.currentPosition: " + hero.getCurrentPosition(), 20, screenHeight - 60);
 		font.draw(game.batch, "hero.direction: " + hero.getDirection(), 20, screenHeight - 80);
 		font.draw(game.batch, "hero.movement: " + hero.getMovement(), 20, screenHeight - 100);

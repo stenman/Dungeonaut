@@ -12,8 +12,8 @@ public class Hero extends Rectangle {
 
 	private int speed = 200;
 
-	private Vector3 touch;
-	private Vector2 currentPosition = new Vector2();
+	private Vector3 touchPos = new Vector3();
+	private Vector2 currentPos = new Vector2();
 	private Vector2 direction = new Vector2();
 	private Vector2 velocity;
 	private Vector2 movement = new Vector2();
@@ -42,28 +42,26 @@ public class Hero extends Rectangle {
 	void updateMotion() {
 		if (moveT) {
 			movement.set(velocity).scl(Gdx.graphics.getDeltaTime());
-			this.setPosition(currentPosition.add(movement));
+			this.setPosition(currentPos.add(movement));
 
 			// TODO: This check number needs to be dynamic (in case the speed is increased for instance)
-			if (touch.dst(currentPosition.x, currentPosition.y, 0) < 2) {
-				currentPosition.x = touch.x;
-				currentPosition.y = touch.y;
-				this.setPosition(currentPosition);
+			if (touchPos.dst2(currentPos.x, currentPos.y, 0) < 3) {
+				currentPos.x = touchPos.x;
+				currentPos.y = touchPos.y;
+				this.setPosition(currentPos);
 				moveT = false;
 			}
 		}
 	}
 
-	public void moveToTouchPosition(boolean moveT) {
+	public void moveToTouchPosition(int screenX, int screenY, boolean moveT) {
 		this.moveT = moveT;
 
-		this.touch = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-		GameScreen.getCamera().unproject(touch);
+		touchPos.set(screenX, screenY, 0);
+		GameScreen.getCamera().unproject(touchPos);
 
-		currentPosition = new Vector2(this.x + (this.getWidth() / 2), this.y + (this.getHeight() / 2));
-
-		direction.set(new Vector2(touch.x, touch.y)).sub(currentPosition).nor();
-
+		currentPos = new Vector2(this.x + (this.getWidth() / 2), this.y + (this.getHeight() / 2));
+		direction.set(new Vector2(touchPos.x, touchPos.y).sub(currentPos).nor());
 		velocity = new Vector2(direction).scl(speed);
 	}
 
@@ -87,12 +85,12 @@ public class Hero extends Rectangle {
 		this.speed = speed;
 	}
 
-	public Vector3 getTouch() {
-		return touch;
+	public Vector3 getTouchPos(){
+		return touchPos;
 	}
-
+	
 	public Vector2 getCurrentPosition() {
-		return currentPosition;
+		return currentPos;
 	}
 
 	public Vector2 getDirection() {
