@@ -145,10 +145,6 @@ public class GameScreen implements Screen {
 
 		game.batch.setProjectionMatrix(camera.combined);
 
-		// SHAPERENDERER BEGIN------------------------------------------------------------------
-
-		// SHAPERENDERER END------------------------------------------------------------------
-
 		// SPRITEBATCH BEGIN------------------------------------------------------------------
 		game.batch.begin();
 
@@ -167,12 +163,8 @@ public class GameScreen implements Screen {
 		game.batch.end();
 		// SPRITEBATCH END--------------------------------------------------------------------
 
-		sr.begin(ShapeType.Line);
-		sr.setColor(0, 0, 0, 0);
-		if (hero.getTouchPos() != null) {
-			sr.line(hero.getCurrentPosition().x, hero.getCurrentPosition().y, hero.getTouchPos().x, hero.getTouchPos().y);
-		}
-		sr.end();
+		// Hero vector beam
+		rederHeroVectorBeam();
 
 		if (Gdx.input.isKeyPressed(Keys.W) || Gdx.input.isKeyPressed(Keys.UP)) {
 			hero.stopMoveByTouch();
@@ -220,6 +212,16 @@ public class GameScreen implements Screen {
 				iter.remove();
 			}
 		}
+	}
+
+	private void rederHeroVectorBeam() {
+		sr.begin(ShapeType.Line);
+		sr.setColor(0, 0, 0, 0);
+		if (hero.getTouchPos() != null) {
+			// sr.line(hero.getCurrentPosition().x, hero.getCurrentPosition().y, hero.getTouchPos().x, hero.getTouchPos().y);
+			sr.line(hero.getCurrentPosition().x, hero.getCurrentPosition().y, hero.getTouchPos().x, hero.getTouchPos().y);
+		}
+		sr.end();
 	}
 
 	@Override
